@@ -29,7 +29,7 @@ def handle_message(event, say):
         if ("subtype" not in event) or (event["subtype"] != "bot_message"):
             # Call the ChatGPT API to generate a response
             response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
+                model=os.environ["CHATGPT_MODEL"],
                 messages=[
                     {"role": "user", "content": message_text},
                 ],
