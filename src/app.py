@@ -29,7 +29,7 @@ def is_bot_message(message):
 
 
 def is_visible(message):
-    return (
+    return not (
         ("subtype" in message and message["subtype"] == "message_deleted")
         or
         ("hidden" in message and message["hidden"])
