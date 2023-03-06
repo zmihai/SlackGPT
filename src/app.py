@@ -32,14 +32,16 @@ def handle_message(event, say):
 
         # Ignore messages sent by the bot itself. Ref: https://api.slack.com/events/message/bot_message
         if not is_bot_message(event):
-            history = get_chat_history(message_channel)
+            history = get_chat_history(channel_id=message_channel, latest_timestamp=event["ts"])
+
+            history.append(
+                {"role": "user", "content": message_text},
+            )
 
             # Call the ChatGPT API to generate a response
             response = openai.ChatCompletion.create(
                 model=os.environ["CHATGPT_MODEL"],
-                messages=history.append(
-                    {"role": "user", "content": message_text},
-                ),
+                messages=history,
                 temperature=0,
             )
 
@@ -50,14 +52,19 @@ def handle_message(event, say):
             say(bot_response)
 
 
-def get_chat_history(channel_id):
+def get_chat_history(channel_id, latest_timestamp):
     chat_history = []
 
     try:
         # Call the conversations.history method using the WebClient
         # conversations.history returns the first 100 messages by default
         # These results are paginated, see: https://api.slack.com/methods/conversations.history$pagination
-        result = app.client.conversations_history(channel=channel_id, limit=40, oldest=str(time.time() - 7200))
+        result = app.client.conversations_history(
+            channel=channel_id,
+            limit=40,
+            oldest=str(time.time() - 7200),
+            latest=latest_timestamp
+        )
 
         conversation_history = result["messages"]
 
