@@ -46,7 +46,7 @@ def handle_message(event, say):
 
         # Ignore messages sent by the bot itself. Ref: https://api.slack.com/events/message/bot_message
         if not is_bot_message(event):
-            history = get_chat_history(channel_id=message_channel, latest_timestamp=event["ts"])
+            history = get_chat_history(message_channel, event["ts"], int(os.environ["CHAT_HISTORY_LIMIT"]))
 
             history.append(
                 {"role": "user", "content": message_text},
@@ -66,7 +66,7 @@ def handle_message(event, say):
             say(bot_response)
 
 
-def get_chat_history(channel_id, latest_timestamp):
+def get_chat_history(channel_id, latest_timestamp, limit):
     chat_history = []
 
     try:
@@ -75,7 +75,7 @@ def get_chat_history(channel_id, latest_timestamp):
         # These results are paginated, see: https://api.slack.com/methods/conversations.history$pagination
         result = app.client.conversations_history(
             channel=channel_id,
-            limit=40,
+            limit=limit,
             oldest=str(int(latest_timestamp) - 7200),
             latest=latest_timestamp
         )
