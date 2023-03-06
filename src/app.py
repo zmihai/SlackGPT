@@ -17,6 +17,7 @@ app = App(
 # Set up the OpenAI API
 openai.api_key = os.environ["OPENAI_API_KEY"]
 
+
 # Define a function to handle incoming messages
 @app.event("message")
 def handle_message(event, say):
@@ -32,6 +33,7 @@ def handle_message(event, say):
 
             # Send the response back to the user
             say(bot_response)
+
 
 # Start the app
 if __name__ == "__main__":
