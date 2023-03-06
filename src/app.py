@@ -28,8 +28,16 @@ def handle_message(event, say):
         # Ignore messages sent by the bot itself. Ref: https://api.slack.com/events/message/bot_message
         if ("subtype" not in event) or (event["subtype"] != "bot_message"):
             # Call the ChatGPT API to generate a response
-            response = openai.Completion.create( engine="davinci", prompt=message_text, max_tokens=1024, n=1, stop=None, temperature=0.7, )
-            bot_response = response.choices[0].text.strip()
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "user", "content": message_text},
+                ],
+                temperature=0,
+            )
+
+            # Parse message and fetch the text
+            bot_response = response.choices[0].message.content
 
             # Send the response back to the user
             say(bot_response)
