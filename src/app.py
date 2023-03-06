@@ -19,7 +19,14 @@ openai.api_key = os.environ["OPENAI_API_KEY"]
 
 
 def is_bot_message(message):
-    return ("subtype" in message) and (message["subtype"] == "bot_message")
+    return (
+        ("subtype" in message and message["subtype"] == "bot_message")
+        or
+        ("bot_id" in message)
+        or
+        ("bot_profile" in message)
+    )
+
 
 
 # Define a function to handle incoming messages
