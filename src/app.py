@@ -23,10 +23,9 @@ def handle_message(event, say):
     if "text" in event:
         # Get the message text and sender ID
         message_text = event["text"]
-        sender_id = event["user"]
 
-        # Ignore messages sent by the bot itself
-        if sender_id != app.client.auth_test()["user_id"]:
+        # Ignore messages sent by the bot itself. Ref: https://api.slack.com/events/message/bot_message
+        if ("subtype" not in event) or (event["subtype"] != "bot_message"):
             # Call the ChatGPT API to generate a response
             response = openai.Completion.create( engine="davinci", prompt=message_text, max_tokens=1024, n=1, stop=None, temperature=0.7, )
             bot_response = response.choices[0].text.strip()
