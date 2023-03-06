@@ -28,6 +28,13 @@ def is_bot_message(message):
     )
 
 
+def is_visible(message):
+    return (
+        ("subtype" in message and message["subtype"] == "message_deleted")
+        or
+        ("hidden" in message and message["hidden"])
+    )
+
 
 # Define a function to handle incoming messages
 @app.event("message")
@@ -84,7 +91,8 @@ def get_chat_history(channel_id, latest_timestamp):
         else:
             role = "user"
 
-        chat_history.append({"role": role, "content": message["text"]})
+        if is_visible(message):
+            chat_history.append({"role": role, "content": message["text"]})
 
     chat_history.reverse()
 
