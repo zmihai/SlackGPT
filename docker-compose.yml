@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  slackgpt:
+    build:
+      context: ./
+    image: slackgpt:latest
+    restart: always
+    container_name: slackgpt
+    env_file: .env
+    ports:
+      - "${HOST_PORT}:${CONTAINER_PORT}"
