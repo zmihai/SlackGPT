@@ -79,6 +79,8 @@ def get_chat_history(channel_id, latest_timestamp):
 
         chat_history.append({"role": role, "content": message["text"]})
 
+    chat_history.reverse()
+
     return chat_history
 
 
