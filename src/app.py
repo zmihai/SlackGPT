@@ -1,5 +1,5 @@
 import os
-import time
+
 import openai
 from dotenv import load_dotenv
 from slack_bolt import App
@@ -76,7 +76,7 @@ def get_chat_history(channel_id, latest_timestamp):
         result = app.client.conversations_history(
             channel=channel_id,
             limit=40,
-            oldest=str(time.time() - 7200),
+            oldest=str(int(latest_timestamp) - 7200),
             latest=latest_timestamp
         )
 
