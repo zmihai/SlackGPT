@@ -76,7 +76,7 @@ def get_chat_history(channel_id, latest_timestamp, limit):
         result = app.client.conversations_history(
             channel=channel_id,
             limit=limit,
-            oldest=str(int(latest_timestamp) - 7200),
+            oldest=str(float(latest_timestamp) - 7200),
             latest=latest_timestamp
         )
 
